@@ -67,12 +67,25 @@ export default {
         "border-light": "#e2e8f0",
         "text-light": "#0f172a",
         "text-muted-light": "#64748b",
-        "background-dark": "#0a0a0a",
-        "surface-dark": "#121212",
-        "card-dark": "#181818",
-        "border-dark": "#1e1e1e",
+        "background-dark": "#0b0b1e",
+        "surface-dark": "#13132e",
+        "card-dark": "#161638",
+        "border-dark": "#1e1e3f",
         "text-dark": "#f8fafc",
         "text-muted-dark": "#94a3b8",
+
+        // Centralized colors mapping
+        brand: {
+          primary: '#16a34a',
+          primaryHover: '#15803d',
+          accent: '#f97316',
+          accentHover: '#ea580c',
+          yellow: '#f59e0b',
+          darkStart: '#0b0b1e',
+          darkEnd: '#13132e',
+          glass: 'rgba(25, 25, 55, 0.45)',
+          glassBorder: 'rgba(255, 255, 255, 0.08)',
+        }
       },
       fontFamily: {
         body: ['Inter', 'Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -81,6 +94,7 @@ export default {
       boxShadow: {
         glass: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
         glow: '0 0 20px rgba(22, 163, 74, 0.5)',
+        "glow-orange": '0 0 20px rgba(249, 115, 22, 0.35)',
       },
       keyframes: {
         "accordion-down": {

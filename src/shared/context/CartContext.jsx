@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // src/shared/context/CartContext.jsx
 import { createContext, useState, useCallback } from 'react';
 
