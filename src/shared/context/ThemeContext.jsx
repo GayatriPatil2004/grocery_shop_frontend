@@ -1,5 +1,5 @@
 // src/shared/context/ThemeContext.jsx
-import { createContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeContextObject } from './ThemeContextObject';
 
 export const ThemeContext = ThemeContextObject;

@@ -1,15 +1,42 @@
 // src/data/categories.js
 // Static category data for the grocery shop
-// Add your categories here with Cloudinary image public IDs
 
 const categories = [
-  // Example:
-  // {
-  //   id: 'fruits',
-  //   name: 'Fruits',
-  //   description: 'Fresh seasonal fruits',
-  //   image: 'grocery_shop/categories/fruits',  // Cloudinary public ID
-  // },
+  {
+    id: 'all',
+    name: 'All Products',
+    icon: 'ShoppingBag',
+  },
+  {
+    id: 'groceries',
+    name: 'Groceries',
+    icon: 'Wheat',
+  },
+  {
+    id: 'amul_products',
+    name: 'Amul Products',
+    icon: 'Milk',
+  },
+  {
+    id: 'ice_cream',
+    name: 'Ice Cream',
+    icon: 'IceCream',
+  },
+  {
+    id: 'ice_cubes',
+    name: 'Ice Cubes',
+    icon: 'Snowflake',
+  },
+  {
+    id: 'water_bottles',
+    name: 'Water Bottles',
+    icon: 'Droplet',
+  },
+  {
+    id: 'cigarettes',
+    name: 'Cigarettes',
+    icon: 'Flame',
+  },
 ];
 
 export default categories;
