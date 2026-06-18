@@ -115,8 +115,9 @@ describe('CartPage Component & Checkout Flow', () => {
       [mockProduct],
       {
         name: 'John Doe',
+        phone: '9876543210',
         address: '123 Main St',
-        notes: 'Phone: 9876543210'
+        notes: ''
       }
     );
 

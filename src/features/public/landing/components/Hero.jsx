@@ -3,7 +3,7 @@ import { ArrowRight, MessageSquare, Star, ShoppingBag } from 'lucide-react';
 import { COLORS } from '../../../../shared/constants/colors';
 
 export default function Hero() {
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210';
+  const whatsappNumber = '919518967710';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hello%20Super%20Mart!%20I%20want%20to%20enquire%20about%20some%20products.`;
 
   return (
