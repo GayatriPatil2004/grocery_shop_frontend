@@ -1,6 +1,5 @@
 // src/features/products/components/ProductList.jsx
 import { useState, useMemo } from 'react';
-import * as LucideIcons from 'lucide-react';
 import { ArrowLeft, ShoppingBag } from 'lucide-react';
 import categories from '../../../data/categories';
 import products from '../../../data/products';
@@ -40,11 +39,6 @@ export default function ProductList() {
     }
   };
 
-  // Helper to dynamically render Lucide Icons by name
-  const renderCategoryIcon = (iconName, className) => {
-    const IconComponent = LucideIcons[iconName] || LucideIcons.ShoppingBag;
-    return <IconComponent className={className} />;
-  };
 
   const selectedCategoryName = categories.find(c => c.id === activeCategory)?.name || 'Products';
 
