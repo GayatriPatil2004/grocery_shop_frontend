@@ -1,44 +1,43 @@
 // src/shared/utils/whatsapp.js
 // WhatsApp utility for building order messages and redirect URLs
 
-const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+const WHATSAPP_NUMBER = '9518967710';
 
 /**
  * Build a WhatsApp order message from cart items
  * @param {Array} cartItems - Array of { name, quantity, price, unit }
- * @param {object} customerInfo - Optional { name, address, notes }
+ * @param {object} customerInfo - { name, phone, address, notes }
  * @returns {string} Formatted message text
  */
 export const buildOrderMessage = (cartItems, customerInfo = {}) => {
-  let message = `🛒 *New Order from GroceryShop*\n\n`;
-
-  if (customerInfo.name) {
-    message += `👤 *Customer:* ${customerInfo.name}\n`;
-  }
-  if (customerInfo.address) {
-    message += `📍 *Address:* ${customerInfo.address}\n`;
-  }
-
-  message += `\n📦 *Order Items:*\n`;
-  message += `─────────────────\n`;
-
-  let total = 0;
-
-  cartItems.forEach((item, index) => {
-    const itemTotal = item.price * item.quantity;
-    total += itemTotal;
-    message += `${index + 1}. ${item.name}\n`;
-    message += `   ${item.quantity} ${item.unit || 'pcs'} × ₹${item.price} = ₹${itemTotal}\n`;
+  const now = new Date();
+  const dateTimeStr = now.toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
   });
 
-  message += `─────────────────\n`;
-  message += `💰 *Total: ₹${total}*\n`;
+  let message = `🛒 *NEW SUPERMARKET ORDER*\n\n`;
 
-  if (customerInfo.notes) {
-    message += `\n📝 *Notes:* ${customerInfo.notes}\n`;
-  }
+  message += `*Customer Name:* ${customerInfo.name || 'N/A'}\n`;
+  message += `*Mobile Number:* ${customerInfo.phone || 'N/A'}\n\n`;
 
-  message += `\nThank you! 🙏`;
+  message += `*Delivery Address:*\n${customerInfo.address || 'N/A'}\n\n`;
+
+  message += `*Ordered Products:*\n`;
+  let total = 0;
+
+  cartItems.forEach((item) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    message += `- ${item.name} × ${item.quantity} = ₹${itemTotal}\n`;
+  });
+
+  message += `\n*Total Amount: ₹${total}*\n\n`;
+
+  message += `*Additional Notes:*\n${customerInfo.notes || 'None'}\n\n`;
+
+  message += `*Date & Time:* ${dateTimeStr}\n\n`;
+  message += `Thank You.`;
 
   return message;
 };
@@ -50,7 +49,7 @@ export const buildOrderMessage = (cartItems, customerInfo = {}) => {
  */
 export const getWhatsAppUrl = (message) => {
   const encodedMessage = encodeURIComponent(message);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+  return `https://wa.me/91${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 };
 
 /**

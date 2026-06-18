@@ -4,7 +4,7 @@ import { ShoppingCart, MapPin, Clock, Phone, Calendar, MessageSquare } from 'luc
 import { COLORS } from '../../constants/colors';
 
 export default function Footer() {
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210';
+  const whatsappNumber = '919518967710';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hello%20Super%20Mart!`;
 
   return (
@@ -53,8 +53,8 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
-                <a href="tel:+919876543210" className="hover:text-orange-400 transition-colors">
-                  +91 98765 43210
+                <a href="tel:+919518967710" className="hover:text-orange-400 transition-colors">
+                  +91 95189 67710
                 </a>
               </li>
               <li className="flex items-start gap-3">

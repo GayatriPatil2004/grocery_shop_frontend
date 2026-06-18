@@ -59,8 +59,9 @@ export default function CartPage() {
       const fullAddress = `${formData.address}${formData.landmark ? `, Landmark: ${formData.landmark}` : ''}`;
       const customerInfo = {
         name: formData.name,
+        phone: formData.phone,
         address: fullAddress,
-        notes: `Phone: ${formData.phone}${formData.notes ? ` | Notes: ${formData.notes}` : ''}`,
+        notes: formData.notes,
       };
 
       // Open WhatsApp order
