@@ -6,14 +6,18 @@ export default function CategoryCard({ category, productCount, onClick }) {
   return (
     <div 
       onClick={onClick}
-      className="group relative h-64 w-full rounded-[2.5rem] overflow-hidden cursor-pointer shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-slate-100 dark:border-white/5"
+      className="group relative h-64 w-full rounded-[2.5rem] overflow-hidden cursor-pointer shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-slate-100 dark:border-white/5 isolate will-change-transform"
+      style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
     >
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0">
+      <div 
+        className="absolute inset-0 rounded-[2.5rem] overflow-hidden will-change-transform"
+        style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
+      >
         <img 
           src={category.image} 
           alt={category.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 will-change-transform"
         />
         {/* Dynamic Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent dark:from-[#0b0b1e]/95 dark:via-[#0b0b1e]/40 opacity-90 transition-opacity group-hover:opacity-100" />

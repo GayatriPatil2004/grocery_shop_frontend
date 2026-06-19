@@ -34,7 +34,7 @@ describe('ThemeContext & ThemeProvider', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(true);
   });
 
-  it('toggles theme between dark and light', () => {
+  it('toggles theme but remains dark', () => {
     render(
       <ThemeProvider>
         <TestComponent />
@@ -48,20 +48,14 @@ describe('ThemeContext & ThemeProvider', () => {
     expect(themeVal.textContent).toBe('dark');
     expect(document.documentElement.classList.contains('dark')).toBe(true);
 
-    // Click to toggle (should become light)
-    fireEvent.click(toggleBtn);
-    expect(themeVal.textContent).toBe('light');
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(localStorage.getItem('theme')).toBe('light');
-
-    // Click again to toggle (should become dark)
+    // Click to toggle (should remain dark)
     fireEvent.click(toggleBtn);
     expect(themeVal.textContent).toBe('dark');
     expect(document.documentElement.classList.contains('dark')).toBe(true);
     expect(localStorage.getItem('theme')).toBe('dark');
   });
 
-  it('initializes theme from localStorage if present', () => {
+  it('ignores non-dark theme from localStorage and initializes as dark', () => {
     localStorage.setItem('theme', 'light');
 
     render(
@@ -70,7 +64,8 @@ describe('ThemeContext & ThemeProvider', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId('theme-value').textContent).toBe('light');
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(screen.getByTestId('theme-value').textContent).toBe('dark');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(localStorage.getItem('theme')).toBe('dark');
   });
 });

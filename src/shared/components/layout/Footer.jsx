@@ -1,14 +1,11 @@
 // src/shared/components/layout/Footer.jsx
 import { Link } from 'react-router-dom';
-import { ShoppingCart, MapPin, Clock, Phone, Calendar, MessageSquare } from 'lucide-react';
+import { ShoppingCart, MapPin, Clock, Phone, Calendar } from 'lucide-react';
 import { COLORS } from '../../constants/colors';
 
 export default function Footer() {
-  const whatsappNumber = '919518967710';
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hello%20Super%20Mart!`;
-
   return (
-    <footer className="w-full bg-slate-900 text-slate-300 dark:bg-[#070718] pt-16 pb-8 border-t border-slate-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
+    <footer id="contact" className="w-full bg-slate-900 text-slate-300 dark:bg-[#070718] pt-16 pb-8 border-t border-slate-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
       {/* Background radial glow */}
       <div 
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] rounded-full opacity-10 blur-[100px] pointer-events-none"
@@ -70,15 +67,6 @@ export default function Footer() {
             <p className="text-sm text-slate-400 leading-relaxed">
               Simply browse products, add them to your cart, fill in your delivery details, and send your order summary directly on WhatsApp!
             </p>
-            <a 
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 w-fit flex items-center gap-2.5 px-6 py-3 rounded-xl font-bold text-white bg-[#25D366] hover:bg-[#20ba56] shadow-lg shadow-green-600/10 hover:shadow-green-600/25 transition-all duration-200"
-            >
-              <MessageSquare className="w-5 h-5 fill-white" />
-              <span>Chat on WhatsApp</span>
-            </a>
           </div>
 
         </div>
@@ -90,8 +78,6 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
           <span>© {new Date().getFullYear()} Super Mart. All Rights Reserved.</span>
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <span>18+ for tobacco products</span>
-            <span className="text-slate-700">•</span>
             <span>Prices subject to change</span>
           </div>
         </div>

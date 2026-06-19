@@ -1,16 +1,15 @@
 // src/shared/components/layout/Navbar.jsx
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Phone, Menu, X, Sun, Moon } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '../../hooks/useCart';
-import { useTheme } from '../../hooks/useTheme';
 import { COLORS } from '../../constants/colors';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { cartCount } = useCart();
-  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +18,9 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const isHomePage = location.pathname === '/';
+  const getNavLink = (hash) => isHomePage ? hash : `/${hash}`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -55,36 +57,23 @@ export default function Navbar() {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#products" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
+              <a href={getNavLink('#products')} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
                 Products
               </a>
-              <a href="#categories" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
-                Categories
-              </a>
-              <a href="#how-to-order" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
+
+              <a href={getNavLink('#how-to-order')} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
                 How to Order
               </a>
-              <a href="#contact" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
+              <a href={getNavLink('#contact')} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 nav-link-hover">
                 Contact
               </a>
             </div>
 
             {/* Right Actions */}
             <div className="hidden md:flex items-center gap-6">
-              {/* Phone Info */}
-              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <Phone className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">+91 98765 43210</span>
-              </div>
 
-              {/* Theme Toggle */}
-              <button 
-                onClick={toggleTheme}
-                className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-              </button>
+
+
 
               {/* Cart Button */}
               <Link 
@@ -106,13 +95,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <div className="flex items-center md:hidden gap-3">
-              {/* Theme Toggle */}
-              <button 
-                onClick={toggleTheme}
-                className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-              >
-                {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-              </button>
+
 
               {/* Cart link icon */}
               <Link to="/cart" className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white">
@@ -139,40 +122,28 @@ export default function Navbar() {
         {isOpen && (
           <div className="md:hidden absolute top-full left-0 w-full py-4 px-6 bg-white dark:bg-[#0b0b1e] border-b border-slate-200 dark:border-white/10 flex flex-col gap-4 shadow-xl animate-slide-down">
             <a 
-              href="#products" 
+              href={getNavLink('#products')} 
               onClick={() => setIsOpen(false)}
               className="text-base font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1"
             >
               Products
             </a>
+
             <a 
-              href="#categories" 
-              onClick={() => setIsOpen(false)}
-              className="text-base font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1"
-            >
-              Categories
-            </a>
-            <a 
-              href="#how-to-order" 
+              href={getNavLink('#how-to-order')} 
               onClick={() => setIsOpen(false)}
               className="text-base font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1"
             >
               How to Order
             </a>
             <a 
-              href="#contact" 
+              href={getNavLink('#contact')} 
               onClick={() => setIsOpen(false)}
               className="text-base font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1"
             >
               Contact
             </a>
-            <div className="h-px bg-slate-200 dark:bg-white/10 my-2"></div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500 dark:text-slate-400">Order Hotline:</span>
-              <a href="tel:+919876543210" className="text-sm font-black text-orange-500 flex items-center gap-1.5">
-                <Phone className="w-4 h-4" /> +91 98765 43210
-              </a>
-            </div>
+
             <Link 
               to="/cart"
               onClick={() => setIsOpen(false)}

@@ -74,7 +74,7 @@ describe('CartContext & Cart Operations', () => {
     const addQtyBtn = screen.getByTestId('add-qty-btn');
     fireEvent.click(addQtyBtn);
 
-    expect(screen.getByTestId('cart-count').textContent).toBe('3');
+    expect(screen.getByTestId('cart-count').textContent).toBe('1');
     expect(screen.getByTestId('cart-total').textContent).toBe('360');
     expect(screen.getByTestId('item-test-p1').textContent).toContain('Basmati Rice - Qty: 3');
   });
@@ -91,7 +91,7 @@ describe('CartContext & Cart Operations', () => {
 
     // Update quantity to 5
     fireEvent.click(screen.getByTestId('update-btn'));
-    expect(screen.getByTestId('cart-count').textContent).toBe('5');
+    expect(screen.getByTestId('cart-count').textContent).toBe('1');
     expect(screen.getByTestId('cart-total').textContent).toBe('600');
 
     // Update quantity to 0 (should remove the item)

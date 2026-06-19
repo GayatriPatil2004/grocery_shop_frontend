@@ -23,11 +23,89 @@ export default function CartPage() {
     notes: '',
   });
 
+  const [errors, setErrors] = useState({
+    name: '',
+    phone: '',
+    address: '',
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validatePhone = (phoneVal) => {
+    if (!phoneVal.trim()) {
+      return 'Contact number is required';
+    }
+    // Strip all non-digit characters except the leading '+'
+    const cleanPhone = phoneVal.replace(/[^\d+]/g, '');
+    let baseDigits = cleanPhone;
+    if (cleanPhone.startsWith('+91')) {
+      baseDigits = cleanPhone.slice(3);
+    } else if (cleanPhone.startsWith('91') && cleanPhone.length === 12) {
+      baseDigits = cleanPhone.slice(2);
+    }
+    const isExactly10Digits = /^\d{10}$/.test(baseDigits);
+    if (!isExactly10Digits) {
+      return 'Phone number must be exactly 10 digits';
+    }
+    return '';
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
+
+    // Phone validation
+    const phoneError = validatePhone(formData.phone);
+    if (phoneError) {
+      newErrors.phone = phoneError;
+    }
+
+    // Address validation
+    if (!formData.address.trim()) {
+      newErrors.address = 'Delivery address is required';
+    } else if (formData.address.trim().length < 10) {
+      newErrors.address = 'Address should be at least 10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let errorMsg = '';
+
+    if (name === 'name') {
+      if (!value.trim()) {
+        errorMsg = 'Full name is required';
+      } else if (value.trim().length < 2) {
+        errorMsg = 'Name must be at least 2 characters';
+      }
+    } else if (name === 'phone') {
+      errorMsg = validatePhone(value);
+    } else if (name === 'address') {
+      if (!value.trim()) {
+        errorMsg = 'Delivery address is required';
+      } else if (value.trim().length < 10) {
+        errorMsg = 'Address should be at least 10 characters';
+      }
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
   const handleCheckout = (e) => {
@@ -38,18 +116,18 @@ export default function CartPage() {
       return;
     }
 
-    if (!formData.name.trim()) {
-      toast.error('Please enter your name');
-      return;
-    }
-
-    if (!formData.phone.trim()) {
-      toast.error('Please enter your contact number');
-      return;
-    }
-
-    if (!formData.address.trim()) {
-      toast.error('Please enter your delivery address');
+    const isValid = validateForm();
+    if (!isValid) {
+      // Toast the specific error message expected by unit tests
+      if (!formData.name.trim()) {
+        toast.error('Please enter your name');
+      } else if (!formData.phone.trim()) {
+        toast.error('Please enter your contact number');
+      } else if (!formData.address.trim()) {
+        toast.error('Please enter your delivery address');
+      } else {
+        toast.error('Please fix the errors in the form');
+      }
       return;
     }
 
@@ -171,6 +249,7 @@ export default function CartPage() {
                             <button 
                               onClick={() => item.quantity === 1 ? removeFromCart(item.id) : updateQuantity(item.id, item.quantity - 1)}
                               className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:scale-110 transition-transform"
+                              title="Decrease quantity"
                             >
                               <Minus className="w-3.5 h-3.5" />
                             </button>
@@ -178,6 +257,7 @@ export default function CartPage() {
                             <button 
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:scale-110 transition-transform"
+                              title="Increase quantity"
                             >
                               <Plus className="w-3.5 h-3.5" />
                             </button>
@@ -186,6 +266,15 @@ export default function CartPage() {
                           <span className="text-sm sm:text-base font-black text-slate-800 dark:text-white min-w-[70px] text-right">
                             ₹{item.price * item.quantity}
                           </span>
+
+                          <button
+                            onClick={() => removeFromCart(item.id)}
+                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/20 rounded-xl transition-all shrink-0"
+                            title="Remove item"
+                            aria-label={`Remove ${item.name} from cart`}
+                          >
+                            <Trash2 className="w-4.5 h-4.5" />
+                          </button>
                         </div>
                       </div>
 
@@ -202,7 +291,7 @@ export default function CartPage() {
                   
                   {/* Name Input */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <label className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors ${errors.name ? 'text-red-500' : 'text-slate-400'}`}>
                       <User className="w-3.5 h-3.5" /> Full Name *
                     </label>
                     <input 
@@ -211,14 +300,22 @@ export default function CartPage() {
                       required
                       value={formData.name}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Enter your full name"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border bg-transparent text-sm focus:outline-none transition-colors ${
+                        errors.name 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                          : 'border-slate-200 dark:border-white/10 focus:border-orange-500'
+                      }`}
                     />
+                    {errors.name && (
+                      <span className="text-[11px] text-red-500 font-semibold mt-0.5">{errors.name}</span>
+                    )}
                   </div>
 
                   {/* Phone Input */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <label className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors ${errors.phone ? 'text-red-500' : 'text-slate-400'}`}>
                       <Phone className="w-3.5 h-3.5" /> Contact Phone *
                     </label>
                     <input 
@@ -227,14 +324,22 @@ export default function CartPage() {
                       required
                       value={formData.phone}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="e.g. +91 9876543210"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border bg-transparent text-sm focus:outline-none transition-colors ${
+                        errors.phone 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                          : 'border-slate-200 dark:border-white/10 focus:border-orange-500'
+                      }`}
                     />
+                    {errors.phone && (
+                      <span className="text-[11px] text-red-500 font-semibold mt-0.5">{errors.phone}</span>
+                    )}
                   </div>
 
                   {/* Address Input */}
                   <div className="sm:col-span-2 flex flex-col gap-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <label className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors ${errors.address ? 'text-red-500' : 'text-slate-400'}`}>
                       <MapPin className="w-3.5 h-3.5" /> Delivery Address *
                     </label>
                     <textarea 
@@ -243,9 +348,17 @@ export default function CartPage() {
                       rows="3"
                       value={formData.address}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Street name, building number, area details"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:border-orange-500 transition-colors resize-none"
+                      className={`w-full px-4 py-3 rounded-xl border bg-transparent text-sm focus:outline-none transition-colors resize-none ${
+                        errors.address 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                          : 'border-slate-200 dark:border-white/10 focus:border-orange-500'
+                      }`}
                     ></textarea>
+                    {errors.address && (
+                      <span className="text-[11px] text-red-500 font-semibold mt-0.5">{errors.address}</span>
+                    )}
                   </div>
 
                   {/* Landmark Input */}

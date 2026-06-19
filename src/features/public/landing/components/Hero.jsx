@@ -1,11 +1,9 @@
 // src/features/public/landing/components/Hero.jsx
-import { ArrowRight, MessageSquare, Star, ShoppingBag } from 'lucide-react';
+import { Star, ShoppingBag } from 'lucide-react';
 import { COLORS } from '../../../../shared/constants/colors';
+import products from '../../../../data/products';
 
 export default function Hero() {
-  const whatsappNumber = '919518967710';
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hello%20Super%20Mart!%20I%20want%20to%20enquire%20about%20some%20products.`;
-
   return (
     <section className="relative min-h-screen pt-24 pb-20 flex items-center justify-center overflow-hidden bg-gradient-to-tr from-emerald-50/20 via-slate-50 to-orange-50/20 dark:gradient-dark-bg text-slate-900 dark:text-white transition-colors duration-300">
       {/* Background decorations for a premium look */}
@@ -41,65 +39,59 @@ export default function Hero() {
               Browse groceries, Amul products, ice cream, cold drinks and more. Add items to your cart, share your address — we'll confirm and dispatch your order via WhatsApp!
             </p>
 
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 mt-2">
-              <a 
-                href="#products"
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-white text-base shadow-xl hover:shadow-orange-500/25 hover:-translate-y-0.5 transition-all duration-200"
-                style={{
-                  background: `linear-gradient(135deg, ${COLORS.accent.gradientStart} 0%, ${COLORS.accent.gradientEnd} 100%)`,
-                }}
-              >
-                <span>Shop Now</span>
-                <ArrowRight className="w-5 h-5" />
-              </a>
+            {/* Actions & Rating */}
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a 
+                  href="#products"
+                  className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-white text-base shadow-xl hover:shadow-orange-500/25 hover:-translate-y-0.5 transition-all duration-200"
+                  style={{
+                    background: `linear-gradient(135deg, ${COLORS.accent.gradientStart} 0%, ${COLORS.accent.gradientEnd} 100%)`,
+                  }}
+                >
+                  <span>Shop Now</span>
+                </a>
+              </div>
 
-              <a 
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-200"
-              >
-                <MessageSquare className="w-5 h-5" />
-                <span>WhatsApp Us</span>
-              </a>
+              {/* Rating / Trust Badging */}
+              <div className="flex items-center gap-2.5 mt-1">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
+                  ))}
+                </div>
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                  <span className="font-black text-slate-900 dark:text-white">4.9/5 Rating</span> • 1k+ Happy Customers
+                </span>
+              </div>
             </div>
 
           </div>
 
           {/* Right Column: Hero Image with Floating Glass Badges */}
           <div className="relative flex justify-center lg:justify-end animate-fade-left">
-            <div className="relative max-w-[500px] w-full aspect-[4/3] lg:aspect-square">
+            <div className="relative max-w-[500px] w-full aspect-[4/3] lg:aspect-square group">
               
-              {/* Hero Main Image */}
-              <img 
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" 
-                alt="Super Mart Groceries" 
-                className="w-full h-full object-cover rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10"
-              />
+              {/* Hero Main Image Wrapper for Zoom-in Effect */}
+              <div className="w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-200/80 dark:border-white/10">
+                <img 
+                  src="/assets/hero_products.png" 
+                  alt="Super Mart Groceries" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+              </div>
 
-              {/* Floating Badge 1: 200+ Products */}
+              {/* Floating Badge 1: Products count */}
               <div 
-                className="absolute -top-5 -right-5 sm:-right-8 p-4 rounded-2xl text-white shadow-xl flex flex-col items-center justify-center text-center select-none"
+                className="absolute -top-5 -right-5 sm:-right-8 p-4 rounded-2xl text-white shadow-xl flex flex-col items-center justify-center text-center select-none z-10"
                 style={{
                   background: `linear-gradient(135deg, ${COLORS.accent.gradientStart} 0%, ${COLORS.accent.gradientEnd} 100%)`,
                 }}
               >
-                <span className="text-xl sm:text-2xl font-black">200+</span>
+                <span className="text-xl sm:text-2xl font-black">{products.length}</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider opacity-90 flex items-center gap-1">
                   <ShoppingBag className="w-3.5 h-3.5" /> Products
                 </span>
-              </div>
-
-              {/* Floating Badge 2: 4.9 Rating */}
-              <div className="absolute -bottom-5 left-6 sm:left-10 glass-morphic px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                  <Star className="w-5 h-5 text-orange-500 fill-orange-500" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-black text-slate-900 dark:text-white">4.9 Rating</span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">1k+ Happy Customers</span>
-                </div>
               </div>
 
             </div>

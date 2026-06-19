@@ -46,10 +46,7 @@ export const CartProvider = ({ children }) => {
     0
   );
 
-  const cartCount = cartItems.reduce(
-    (count, item) => count + item.quantity,
-    0
-  );
+  const cartCount = cartItems.length;
 
   return (
     <CartContext.Provider
