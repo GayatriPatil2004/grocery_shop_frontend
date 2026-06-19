@@ -1,21 +1,19 @@
 // src/shared/context/ThemeContext.jsx
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ThemeContextObject } from './ThemeContextObject';
 
 export const ThemeContext = ThemeContextObject;
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'dark';
-  });
+  const theme = 'dark';
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    // Theme is permanently dark
   };
 
   return (
