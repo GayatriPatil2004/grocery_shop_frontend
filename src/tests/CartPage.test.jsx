@@ -1,7 +1,7 @@
 // src/tests/CartPage.test.jsx
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import CartPage from '../features/cart/components/CartPage';
 import { CartContext } from '../shared/context/CartContext';
@@ -21,6 +21,13 @@ vi.mock('react-hot-toast', () => ({
 // Mock the whatsapp utility
 vi.mock('../shared/utils/whatsapp', () => ({
   sendOrderToWhatsApp: vi.fn()
+}));
+
+// Mock Firebase Service
+vi.mock('../shared/services/firebaseService', () => ({
+  firebaseService: {
+    add: vi.fn().mockResolvedValue({ id: 'mock-order-id' })
+  }
 }));
 
 const mockProduct = {
@@ -111,15 +118,17 @@ describe('CartPage Component & Checkout Flow', () => {
     fireEvent.click(submitBtn);
 
     // Verify WhatsApp util call
-    expect(whatsappUtils.sendOrderToWhatsApp).toHaveBeenCalledWith(
-      [mockProduct],
-      {
-        name: 'John Doe',
-        phone: '9876543210',
-        address: '123 Main St',
-        notes: ''
-      }
-    );
+    await waitFor(() => {
+      expect(whatsappUtils.sendOrderToWhatsApp).toHaveBeenCalledWith(
+        [mockProduct],
+        {
+          name: 'John Doe',
+          phone: '9876543210',
+          address: '123 Main St',
+          notes: ''
+        }
+      );
+    });
 
     expect(toast.success).toHaveBeenCalledWith('Redirecting to WhatsApp to place your order!');
   });

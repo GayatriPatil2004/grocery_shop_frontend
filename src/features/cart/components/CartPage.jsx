@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus, MessageSquare, MapPin, User, FileText, Phone } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useCart } from '../../../shared/hooks/useCart';
+import { firebaseService } from '../../../shared/services/firebaseService';
 import Navbar from '../../../shared/components/layout/Navbar';
 import Footer from '../../../shared/components/layout/Footer';
 import { getImageUrl } from '../../../shared/lib/cloudinary';
@@ -108,7 +109,7 @@ export default function CartPage() {
     setErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
 
     if (cartItems.length === 0) {
@@ -118,7 +119,6 @@ export default function CartPage() {
 
     const isValid = validateForm();
     if (!isValid) {
-      // Toast the specific error message expected by unit tests
       if (!formData.name.trim()) {
         toast.error('Please enter your name');
       } else if (!formData.phone.trim()) {
@@ -142,7 +142,29 @@ export default function CartPage() {
         notes: formData.notes,
       };
 
-      // Open WhatsApp order
+      // 1. Save to Firebase first for admin tracking
+      const orderData = {
+        customerName: formData.name,
+        mobile: formData.phone,
+        address: fullAddress,
+        products: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        totalAmount: cartTotal,
+        status: 'Pending',
+        notes: formData.notes || ''
+      };
+
+      try {
+        await firebaseService.add('orders', orderData);
+      } catch (fbError) {
+        console.error("Failed to save order to Firebase, proceeding with WhatsApp only:", fbError);
+        // We don't block the user if Firebase fails, but we log it.
+      }
+
+      // 2. Open WhatsApp order
       sendOrderToWhatsApp(cartItems, customerInfo);
       
       toast.success('Redirecting to WhatsApp to place your order!');
@@ -152,7 +174,7 @@ export default function CartPage() {
         clearCart();
         setIsSubmitting(false);
         navigate('/');
-      }, 1000);
+      }, 1500);
     } catch (error) {
       console.error(error);
       toast.error('Something went wrong. Please try again.');
