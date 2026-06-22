@@ -1,9 +1,8 @@
 // src/features/public/landing/components/Hero.jsx
 import { Star, ShoppingBag } from 'lucide-react';
 import { COLORS } from '../../../../shared/constants/colors';
-import products from '../../../../data/products';
 
-export default function Hero() {
+export default function Hero({ productCount = 0 }) {
   return (
     <section className="relative min-h-screen pt-24 pb-20 flex items-center justify-center overflow-hidden bg-gradient-to-tr from-emerald-50/20 via-slate-50 to-orange-50/20 dark:gradient-dark-bg text-slate-900 dark:text-white transition-colors duration-300">
       {/* Background decorations for a premium look */}
@@ -88,7 +87,7 @@ export default function Hero() {
                   background: `linear-gradient(135deg, ${COLORS.accent.gradientStart} 0%, ${COLORS.accent.gradientEnd} 100%)`,
                 }}
               >
-                <span className="text-xl sm:text-2xl font-black">{products.length}</span>
+                <span className="text-xl sm:text-2xl font-black">{productCount}</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider opacity-90 flex items-center gap-1">
                   <ShoppingBag className="w-3.5 h-3.5" /> Products
                 </span>

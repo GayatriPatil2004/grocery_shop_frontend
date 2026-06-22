@@ -1,18 +1,33 @@
-// src/features/public/landing/LandingPage.jsx
+import { useState, useEffect } from 'react';
 import Navbar from '../../../shared/components/layout/Navbar';
 import Hero from './components/Hero';
 import ProductList from '../../products/components/ProductList';
 import HowToOrder from './components/HowToOrder';
 import Footer from '../../../shared/components/layout/Footer';
+import { firebaseService } from '../../../shared/services/firebaseService';
 
 export default function LandingPage() {
+  const [productCount, setProductCount] = useState(0);
+
+  useEffect(() => {
+    async function getCount() {
+      try {
+        const products = await firebaseService.getAll('products');
+        setProductCount(products.length);
+      } catch (error) {
+        console.error("Failed to fetch product count for Hero:", error);
+      }
+    }
+    getCount();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0b0b1e] text-slate-900 dark:text-white transition-colors duration-300">
       {/* Navigation */}
       <Navbar />
 
       {/* Hero Section */}
-      <Hero />
+      <Hero productCount={productCount} />
 
       {/* Products & Filters Section */}
       <ProductList />
