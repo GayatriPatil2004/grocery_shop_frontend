@@ -3,8 +3,6 @@ import { useState, useMemo, useEffect } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { ArrowLeft, ShoppingBag } from 'lucide-react';
 import { firebaseService } from '../../../shared/services/firebaseService';
-import categoriesData from '../../../data/categories';
-import productsData from '../../../data/products';
 import ProductCard from './ProductCard';
 import CategoryCard from '../../categories/components/CategoryCard';
 
@@ -22,12 +20,10 @@ export default function ProductList() {
           firebaseService.getAll('categories'),
           firebaseService.getAll('products')
         ]);
-        setCategories(fetchedCategories.length > 0 ? fetchedCategories : categoriesData);
-        setProducts(fetchedProducts.length > 0 ? fetchedProducts : productsData);
+        setCategories(fetchedCategories);
+        setProducts(fetchedProducts);
       } catch (error) {
-        console.error("Error loading data from Firebase, falling back to static:", error);
-        setCategories(categoriesData);
-        setProducts(productsData);
+        console.error("Error loading data from Firebase:", error);
       } finally {
         setLoading(false);
       }
@@ -37,10 +33,18 @@ export default function ProductList() {
 
   // Filter products based on selected category
   const filteredProducts = useMemo(() => {
-    return activeCategory === 'all'
-      ? [] 
-      : products.filter(p => p.category === activeCategory || p.originalId === activeCategory);
-  }, [activeCategory, products]);
+    if (activeCategory === 'all') return [];
+    
+    // Get the category object to allow matching by name as a fallback
+    const selectedCat = categories.find(c => c.id === activeCategory || c.originalId === activeCategory);
+    const selectedName = selectedCat?.name;
+
+    return products.filter(p => 
+      p.category === activeCategory || 
+      p.originalId === activeCategory ||
+      (selectedName && p.category === selectedName) // Fallback for name-based storage
+    );
+  }, [activeCategory, products, categories]);
 
   // Categories to show in the grid
   const displayCategories = useMemo(() => {
@@ -101,7 +105,12 @@ export default function ProductList() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-up">
             {displayCategories.map((category) => {
               const catId = category.id || category.originalId;
-              const productCount = products.filter(p => p.category === catId || p.originalId === catId).length;
+              const catName = category.name;
+              const productCount = products.filter(p => 
+                p.category === catId || 
+                p.originalId === catId || 
+                (catName && p.category === catName)
+              ).length;
               return (
                 <CategoryCard 
                   key={catId} 
